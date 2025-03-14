@@ -66,13 +66,21 @@ int main()
               << sphereMesh2->getIndices().size() << " indices" << std::endl;
     sphereMesh2->initialize();
 
-    // 创建 Entity 对象（移除 Collider 参数）
+    // === 创建地面 Mesh ===
+    CubeMesh* groundMesh = new CubeMesh(2.0f, 2.0f, 0.05f); // 长 2.0，宽 2.0，高 0.05
+    std::cout << "GroundMesh created with " << groundMesh->getPositions().size() << " vertices, "
+              << groundMesh->getIndices().size() << " indices" << std::endl;
+    groundMesh->initialize();
+
+    // 创建 Entity 对象
     Entity* sphereEntity1 = new Entity(sphereMesh1, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
     Entity* sphereEntity2 = new Entity(sphereMesh2, glm::vec3(0.1f, 0.5f, 0.0f), 1.0f);
+    Entity* groundEntity = new Entity(groundMesh, glm::vec3(0.0f, -0.1f, 0.0f), 0.0f); // 质量 0 表示固定
 
     // 添加到 XPBDSystem
     xpbdSystem.addObject(sphereEntity1);
     xpbdSystem.addObject(sphereEntity2);
+    xpbdSystem.addObject(groundEntity);
 
     xpbdSystem.initialize();
 
@@ -113,8 +121,10 @@ int main()
     // 清理资源（移除 Collider 的删除）
     delete sphereEntity1;
     delete sphereEntity2;
+    delete groundEntity;
     delete sphereMesh1;
     delete sphereMesh2;
+    delete groundMesh;
 
     glfwTerminate();
     return 0;

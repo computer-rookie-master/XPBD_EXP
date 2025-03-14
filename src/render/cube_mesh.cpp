@@ -1,8 +1,10 @@
 #include "render/cube_mesh.h"
 
-CubeMesh::CubeMesh(float size) : Mesh()
+CubeMesh::CubeMesh(float length, float width, float height) : Mesh()
 {
-    float halfSize = size / 2.0f;
+    float halfLength = length / 2.0f;
+    float halfWidth = width / 2.0f;
+    float halfHeight = height / 2.0f;
 
     positions.clear();
     normals.clear();
@@ -10,14 +12,14 @@ CubeMesh::CubeMesh(float size) : Mesh()
 
     std::vector<glm::vec3> tempPositions = 
     {
-        {-halfSize, -halfSize, -halfSize}, // 0
-        { halfSize, -halfSize, -halfSize}, // 1
-        { halfSize,  halfSize, -halfSize}, // 2
-        {-halfSize,  halfSize, -halfSize}, // 3
-        {-halfSize, -halfSize,  halfSize}, // 4
-        { halfSize, -halfSize,  halfSize}, // 5
-        { halfSize,  halfSize,  halfSize}, // 6
-        {-halfSize,  halfSize,  halfSize}  // 7
+        {-halfLength, -halfHeight, -halfWidth}, // 0: 前左下
+        { halfLength, -halfHeight, -halfWidth}, // 1: 前右下
+        { halfLength,  halfHeight, -halfWidth}, // 2: 前右上
+        {-halfLength,  halfHeight, -halfWidth}, // 3: 前左上
+        {-halfLength, -halfHeight,  halfWidth}, // 4: 后左下
+        { halfLength, -halfHeight,  halfWidth}, // 5: 后右下
+        { halfLength,  halfHeight,  halfWidth}, // 6: 后右上
+        {-halfLength,  halfHeight,  halfWidth}  // 7: 后左上
     };
 
     std::vector<glm::vec3> tempNormals = 
