@@ -22,7 +22,7 @@ class Mesh
         const std::vector<glm::vec3>& getPositions() const { return positions; }
         const std::vector<glm::vec3>& getNormals() const { return normals; }
         const std::vector<GLuint>& getIndices() const { return indices; }
-
+        const std::vector<GLfloat>& getVertexData() const { return vertexData; }
         // 加载 OBJ 文件
         bool loadFromOBJ(const std::string& filename);
 

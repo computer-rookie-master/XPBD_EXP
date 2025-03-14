@@ -1,0 +1,3 @@
+/Volumes/1TDrive/Projects/XPBD_EXP/build/CMakeFiles/XPBD_EXP.dir
+/Volumes/1TDrive/Projects/XPBD_EXP/build/CMakeFiles/edit_cache.dir
+/Volumes/1TDrive/Projects/XPBD_EXP/build/CMakeFiles/rebuild_cache.dir

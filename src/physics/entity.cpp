@@ -1,18 +1,15 @@
 #include "physics/entity.h"
 #include <iostream>
 
-Entity::Entity(Mesh* m, const glm::vec3& pos, float mas, Collider* c)
-    : mesh(m), position(pos), velocity(0.0f), mass(mas), force(0.0f), collider(c)
+Entity::Entity(Mesh* m, const glm::vec3& pos, float mas)
+    : mesh(m), position(pos), linear_velocity(0.0f), angular_velocity(0.0f), rotation(glm::quat(1.0f, 0.0f, 0.0f, 0.0f)), mass(mas), inverse_mass((mas != 0.0f) ? 1.0f / mas : 0.0f), force(0.0f), torque(0.0f), fixed(false)
 {
     if (mesh == nullptr) {
         std::cerr << "Error: Entity created with null Mesh pointer" << std::endl;
-    }
-    if (collider == nullptr) {
-        std::cerr << "Warning: Entity created with null Collider pointer" << std::endl;
     }
 }
 
 Entity::~Entity()
 {
-    delete collider; // 清理动态分配的 Collider
+    // 其他资源（如 mesh）由调用者管理，避免双重删除
 }

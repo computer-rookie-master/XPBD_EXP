@@ -90,6 +90,8 @@
         "strstream": "cpp",
         "typeindex": "cpp",
         "unordered_set": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "cinttypes": "cpp",
+        "any": "cpp"
     }
 }

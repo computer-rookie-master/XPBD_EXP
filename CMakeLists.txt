@@ -5,6 +5,7 @@ project(XPBD_EXP)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+
 # OPENGL
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
@@ -21,14 +22,42 @@ add_executable(XPBD_EXP
     src/main.cpp
     src/physics/xpbd.cpp
     src/physics/entity.cpp
-    src/physics/collider.cpp
     src/physics/collision_broad_phase.cpp
     src/physics/collision_narrow_phase.cpp
+    src/physics/physics_util.cpp
     src/render/mesh.cpp
     src/render/mesh_renderer.cpp
     src/render/sphere_mesh.cpp
     src/render/cube_mesh.cpp
 )
 
+
 #链接库
 target_link_libraries(XPBD_EXP ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glfw ${GLM_LIBRARIES})
+
+
+# # 添加 GoogleTest
+# add_subdirectory(thirdparty/googletest)
+# include_directories(thirdparty/googletest/googletest/include)
+# include_directories(thirdparty/googletest/googlemock/include)
+
+# # 添加测试目标
+# enable_testing()
+# add_executable(XPBD_EXP_Tests
+#     tests/test_collision_broad_phase.cpp  # 单元测试文件，稍后创建
+#     src/physics/collision_broad_phase.cpp  # 测试目标文件
+#     src/physics/entity.cpp                 # 依赖 Entity 类
+#     src/physics/physics_util.cpp           # 依赖工具函数
+#     src/render/mesh.cpp                    # 依赖 Mesh 类
+#     src/render/sphere_mesh.cpp             # 用于创建测试网格
+# )
+
+# # 链接测试目标库
+# target_link_libraries(XPBD_EXP_Tests 
+#     gtest 
+#     gtest_main 
+#     ${GLM_LIBRARIES}  # 需要 GLM 支持
+# )
+
+# # 添加测试到 CTest
+# add_test(NAME CollisionBroadPhaseTest COMMAND XPBD_EXP_Tests)

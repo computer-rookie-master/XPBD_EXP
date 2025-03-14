@@ -21,27 +21,36 @@ void CollisionBroadPhase::deleteTree(AABBNode* node)
     delete node;
 }
 
-AABB CollisionBroadPhase::computeAABB(const Collider* collider, const glm::vec3& position)
+AABB CollisionBroadPhase::computeAABB(const Entity* entity)
 {
     AABB aabb;
     aabb.min = glm::vec3(std::numeric_limits<float>::max());
     aabb.max = glm::vec3(-std::numeric_limits<float>::max());
 
-    if (collider->type == COLLIDER_TYPE_SPHERE)
+    // 使用Mesh的顶点数据计算AABB
+    const std::vector<glm::vec3>& vertices = entity->getMesh()->getPositions();
+    if (vertices.empty())
     {
-        float radius = collider->sphere.radius;
-        aabb.min = position - glm::vec3(radius);
-        aabb.max = position + glm::vec3(radius);
+        // 如果没有顶点数据，返回一个默认的AABB（以position为中心，尺寸为0.1 * 0.1 * 0.1）
+        glm::vec3 defaultSize(0.05f, 0.05f, 0.05f);
+        aabb.min = entity->getPosition() - defaultSize;
+        aabb.max = entity->getPosition() + defaultSize;
+        return aabb;
     }
-    else if (collider->type == COLLIDER_TYPE_CONVEX_HULL)
+
+    // 考虑位置和旋转
+    glm::mat4x4 transform = glm::mat4_cast(entity->getRotation());
+    glm::vec3 position = entity->getPosition();
+    for (const auto& vertex : vertices)
     {
-        for (const auto& vertex : collider->convexHull.vertices)
-        {
-            glm::vec3 worldVertex = position + vertex;
-            aabb.min = glm::min(aabb.min, worldVertex);
-            aabb.max = glm::max(aabb.max, worldVertex);
-        }
+        // 将顶点局部坐标转换为世界坐标
+        glm::vec4 worldVertex = transform * glm::vec4(vertex, 1.0f);
+        worldVertex += glm::vec4(position, 0.0f);
+        glm::vec3 worldPos(worldVertex.x, worldVertex.y, worldVertex.z);
+        aabb.min = glm::min(aabb.min, worldPos);
+        aabb.max = glm::max(aabb.max, worldPos);
     }
+
     return aabb;
 }
 
@@ -116,7 +125,7 @@ void CollisionBroadPhase::updateAABBNode(AABBNode* node)
 
     if (node->isLeaf && node->entity)
     {
-        node->aabb = computeAABB(node->entity->getCollider(), node->entity->getPosition());
+        node->aabb = computeAABB(node->entity);
     }
     else
     {
@@ -170,7 +179,7 @@ void CollisionBroadPhase::collectCollisionPairs(AABBNode* node1, AABBNode* node2
 
 void CollisionBroadPhase::addObject(Entity* entity)
 {
-    if (!entity || !entity->getCollider())
+    if (!entity)
     {
         std::cerr << "Error: Cannot add entity to CollisionBroadPhase without collider" << std::endl;
         return;
@@ -179,7 +188,7 @@ void CollisionBroadPhase::addObject(Entity* entity)
     AABBNode* node = new AABBNode();
     node->entity = entity;
     node->isLeaf = true;
-    node->aabb = computeAABB(entity->getCollider(), entity->getPosition());
+    node->aabb = computeAABB(entity);
     insertAABBNode(node);
 }
 

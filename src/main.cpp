@@ -7,7 +7,6 @@
 #include "render/sphere_mesh.h"
 #include "render/cube_mesh.h"
 #include "physics/entity.h"
-#include "physics/collider.h"
 #include <cstdlib>
 #include <iostream>
 #include <vector>
@@ -67,17 +66,15 @@ int main()
               << sphereMesh2->getIndices().size() << " indices" << std::endl;
     sphereMesh2->initialize();
 
-    // 创建 Collider 对象
-    Collider* sphereCollider1 = new Collider(0.1f); // 球形碰撞体
-    Collider* sphereCollider2 = new Collider(0.1f); // 球形碰撞体
-
-    // 创建 Entity 对象
-    Entity* sphereEntity1 = new Entity(sphereMesh1, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, sphereCollider1);
-    Entity* sphereEntity2 = new Entity(sphereMesh2, glm::vec3(0.1f, 0.5f, 0.0f), 1.0f, sphereCollider2);
+    // 创建 Entity 对象（移除 Collider 参数）
+    Entity* sphereEntity1 = new Entity(sphereMesh1, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    Entity* sphereEntity2 = new Entity(sphereMesh2, glm::vec3(0.1f, 0.5f, 0.0f), 1.0f);
 
     // 添加到 XPBDSystem
     xpbdSystem.addObject(sphereEntity1);
     xpbdSystem.addObject(sphereEntity2);
+
+    xpbdSystem.initialize();
 
     glEnable(GL_DEPTH_TEST);
 
@@ -92,7 +89,7 @@ int main()
         glm::mat4 view = glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f),
                                      glm::vec3(0.0f, 0.0f, 0.0f),
                                      glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f/600.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
         const auto& objects = xpbdSystem.getObjects();
         for (size_t i = 0; i < objects.size(); ++i)
@@ -113,13 +110,11 @@ int main()
         glfwPollEvents();
     }
 
-    // 清理资源
+    // 清理资源（移除 Collider 的删除）
     delete sphereEntity1;
     delete sphereEntity2;
     delete sphereMesh1;
     delete sphereMesh2;
-    delete sphereCollider1;
-    delete sphereCollider2;
 
     glfwTerminate();
     return 0;

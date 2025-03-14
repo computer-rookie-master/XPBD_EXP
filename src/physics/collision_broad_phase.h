@@ -4,9 +4,9 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include "physics/entity.h"
-#include "physics/collider.h"
 
-struct AABB {
+struct AABB 
+{
     glm::vec3 min;
     glm::vec3 max;
 };
@@ -31,11 +31,11 @@ class CollisionBroadPhase
         void addObject(Entity* entity);
         void update();
         void collectCollisionPairs(std::vector<std::pair<Entity*, Entity*>>& pairs);
+        AABB computeAABB(const Entity* entity);
 
     private:
         AABBNode* root;
-
-        AABB computeAABB(const Collider* collider, const glm::vec3& position);
+        
         void insertAABBNode(AABBNode* node);
         void updateAABBNode(AABBNode* node);
         void collectCollisionPairs(AABBNode* node1, AABBNode* node2, std::vector<std::pair<Entity*, Entity*>>& pairs);

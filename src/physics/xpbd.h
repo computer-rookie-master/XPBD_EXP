@@ -13,6 +13,8 @@ class XPBDSystem
         XPBDSystem();
         void addObject(Entity* entity);
         void run();
+        void initialize();
+        void applyImpulse(Entity* obj1, Entity* obj2, glm::vec3 N);
         const std::vector<Entity*>& getObjects() const { return objects; }
 
     private:
