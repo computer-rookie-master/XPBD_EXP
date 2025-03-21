@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <limits>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -73,9 +74,9 @@ int main()
     groundMesh->initialize();
 
     // 创建 Entity 对象
-    Entity* sphereEntity1 = new Entity(sphereMesh1, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
-    Entity* sphereEntity2 = new Entity(sphereMesh2, glm::vec3(0.1f, 0.5f, 0.0f), 1.0f);
-    Entity* groundEntity = new Entity(groundMesh, glm::vec3(0.0f, -0.1f, 0.0f), 0.0f); // 质量 0 表示固定
+    Entity* sphereEntity1 = new Entity(sphereMesh1, glm::vec3(0.0f, 0.1f, 0.0f), 1.0f);
+    Entity* sphereEntity2 = new Entity(sphereMesh2, glm::vec3(0.15f, 5.0f, 0.0f), 1.0f);
+    Entity* groundEntity = new Entity(groundMesh, glm::vec3(0.0f, -0.1f, 0.0f), 0); // 质量 0 表示固定
 
     // 添加到 XPBDSystem
     xpbdSystem.addObject(sphereEntity1);
@@ -102,7 +103,6 @@ int main()
         const auto& objects = xpbdSystem.getObjects();
         for (size_t i = 0; i < objects.size(); ++i)
         {
-            std::cout << "Rendering object " << i << " at " << objects[i]->getPosition().x << std::endl;
             glBindVertexArray(0);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -110,7 +110,7 @@ int main()
 
             glm::mat4 model = glm::translate(glm::mat4(1.0f), objects[i]->getPosition());
             glm::mat4 mvp = projection * view * model;
-            renderer.render(objects[i]->getMesh(), mvp, lightPos, viewPos, objects[i]->getPosition());
+            renderer.render(objects[i]->getMesh(), mvp, lightPos, viewPos, objects[i]->getPosition(), objects[i]->getRotation());
         }
 
         xpbdSystem.run();

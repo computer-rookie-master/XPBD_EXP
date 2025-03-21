@@ -51,6 +51,8 @@ AABB CollisionBroadPhase::computeAABB(const Entity* entity)
         aabb.max = glm::max(aabb.max, worldPos);
     }
 
+    std::cout << "Entity: " << entity << ", AABB: (" << aabb.min.x << ", " << aabb.min.y << ") - (" << aabb.max.x << ", " << aabb.max.y << ")" << std::endl;
+
     return aabb;
 }
 
@@ -74,6 +76,7 @@ void CollisionBroadPhase::insertAABBNode(AABBNode* node)
     if (!root)
     {
         root = node;
+        std::cout << "Inserted: " << node->entity << ", AABB min: " << node->aabb.min.y << std::endl;
         return;
     }
 
@@ -98,6 +101,14 @@ void CollisionBroadPhase::insertAABBNode(AABBNode* node)
             newParent->aabb = mergeAABB(current->aabb, node->aabb);
             if (newParent->parent)
             {
+                if (newParent->parent->left == current)
+                {
+                    newParent->parent->left = newParent;
+                }
+                else
+                {
+                    newParent->parent->right = newParent;
+                }
                 AABBNode* parent = newParent->parent;
                 while (parent)
                 {
@@ -117,6 +128,8 @@ void CollisionBroadPhase::insertAABBNode(AABBNode* node)
             if (current->right) stack.push_back(current->right);
         }
     }
+    std::cout << "Inserted: " << node->entity << ", AABB min: " << node->aabb.min.y << std::endl;
+    printTree(root);
 }
 
 void CollisionBroadPhase::updateAABBNode(AABBNode* node)
@@ -207,4 +220,24 @@ void CollisionBroadPhase::collectCollisionPairs(std::vector<std::pair<Entity*, E
     {
         std::cout << "Pair: (" << pair.first << ", " << pair.second << ")" << std::endl;
     }
+}
+
+void CollisionBroadPhase::printTree(AABBNode* node, int depth)
+{
+    if (!node) return;
+
+    // 生成缩进
+    std::string indent(depth * 2, ' ');
+
+    // 打印节点信息
+    std::cout << indent << "Node: " << node
+              << ", Entity: " << (node->entity ? node->entity : nullptr)
+              << ", isLeaf: " << (node->isLeaf ? "true" : "false")
+              << ", AABB: (" << node->aabb.min.x << ", " << node->aabb.min.y << ", " << node->aabb.min.z
+              << ") - (" << node->aabb.max.x << ", " << node->aabb.max.y << ", " << node->aabb.max.z << ")"
+              << std::endl;
+
+    // 递归打印子节点
+    printTree(node->left, depth + 1);
+    printTree(node->right, depth + 1);
 }

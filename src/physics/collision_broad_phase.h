@@ -42,6 +42,8 @@ class CollisionBroadPhase
         bool checkAABBCollision(const AABB& aabb1, const AABB& aabb2);
         AABB mergeAABB(const AABB& aabb1, const AABB& aabb2);
         void deleteTree(AABBNode* node);
+
+        void printTree(AABBNode* node, int depth = 0);
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-float get_magnitude(glm::vec3 vec);
+float get_sqr_magnitude(glm::vec3 vec);
 
 glm::vec3 MultiplyVector(const glm::mat4x4& mat, const glm::vec3& vec);
 

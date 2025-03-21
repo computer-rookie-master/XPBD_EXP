@@ -66,7 +66,7 @@ void MeshRenderer::initialize()
 }
 
 void MeshRenderer::render(Mesh* mesh, const glm::mat4& mvp, const glm::vec3& lightPos, 
-                          const glm::vec3& viewPos, const glm::vec3& objectPos) 
+                          const glm::vec3& viewPos, const glm::vec3& objectPos, const glm::quat& rotation) 
 {
     if (mesh == nullptr) 
     {
@@ -76,7 +76,9 @@ void MeshRenderer::render(Mesh* mesh, const glm::mat4& mvp, const glm::vec3& lig
 
     glUseProgram(shaderProgram);
 
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), objectPos);
+    glm::mat4 rotationMatrix = glm::mat4_cast(rotation);
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), objectPos) * rotationMatrix;
+
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
 

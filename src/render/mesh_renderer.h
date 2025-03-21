@@ -13,7 +13,7 @@ public:
     ~MeshRenderer();
     
     void render(Mesh* mesh, const glm::mat4& mvp, const glm::vec3& lightPos, 
-                const glm::vec3& viewPos, const glm::vec3& objectPos);
+                const glm::vec3& viewPos, const glm::vec3& objectPos, const glm::quat& rotation);
     void initialize();
 
 private:

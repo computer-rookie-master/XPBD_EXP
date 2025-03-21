@@ -92,6 +92,7 @@
         "unordered_set": "cpp",
         "valarray": "cpp",
         "cinttypes": "cpp",
-        "any": "cpp"
+        "any": "cpp",
+        "ranges": "cpp"
     }
 }

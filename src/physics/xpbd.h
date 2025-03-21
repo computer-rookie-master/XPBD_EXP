@@ -15,6 +15,7 @@ class XPBDSystem
         void run();
         void initialize();
         void applyImpulse(Entity* obj1, Entity* obj2, glm::vec3 N);
+        void applyImpulseWithGround(Entity* obj, glm::vec3 P, glm::vec3 N);
         const std::vector<Entity*>& getObjects() const { return objects; }
 
     private:

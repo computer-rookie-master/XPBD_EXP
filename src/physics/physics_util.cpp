@@ -1,9 +1,8 @@
 #include "physics_util.h"
 
-float get_magnitude(glm::vec3 vec)
+float get_sqr_magnitude(glm::vec3 vec)
 {
-    int x = vec.x, y = vec.y, z = vec.z;
-    return glm::sqrt(x * x + y * y + z * z);
+    return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
 }
 
 glm::vec3 MultiplyVector(const glm::mat4x4& mat, const glm::vec3& vec)
